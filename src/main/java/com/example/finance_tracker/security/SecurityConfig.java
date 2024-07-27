@@ -2,6 +2,7 @@ package com.example.finance_tracker.security;
 
 import com.example.finance_tracker.filter.CustomAuthenticationFilter;
 import com.example.finance_tracker.filter.CustomAuthorizationFilter;
+import com.example.finance_tracker.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.*;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SecurityService securityService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -39,6 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
         http.authorizeRequests().antMatchers(POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/api/users/{userId}/employer-details").access("@securityService.hasAccess(authentication, #userId)");
+        http.authorizeRequests().antMatchers("/api/users/{userId}/expenses/**").access("@securityService.hasAccess(authentication, #userId)");
+        http.authorizeRequests().antMatchers("/api/super-admin/**").hasAuthority("ROLE_SUPER_ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

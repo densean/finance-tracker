@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import java.util.*;
 
 public interface UserService {
-    Page<User> getUsers(int pageNo, int pageSize);
+    Page<UserPublicDto> getUsers(int pageNo, int pageSize);
     User saveUser(User user);
     User getUser(String username);
     UserPublicDto getUserById(Long id);

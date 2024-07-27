@@ -1,6 +1,5 @@
 package com.example.finance_tracker;
 
-import com.example.finance_tracker.model.EmployerDetails;
 import com.example.finance_tracker.model.Role;
 import com.example.finance_tracker.model.User;
 import com.example.finance_tracker.service.UserService;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 @SpringBootApplication
 public class Application {
@@ -33,6 +31,8 @@ public class Application {
 		return args -> {
 			userService.saveRole(new Role(null, "ROLE_ADMIN"));
 			userService.saveRole(new Role(null, "ROLE_USER"));
+			userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
+
 
 			userService.saveUser(new User(
 					null,
@@ -44,10 +44,12 @@ public class Application {
 					"aaa",
 					false,
 					new ArrayList<>(),
-//					new ArrayList<>(),
-					null));
+					new ArrayList<>(),
+					null,
+					new ArrayList<>()
+			));
 
-			userService.assignRoleToUser("seanthesheep", "ROLE_ADMIN");
+			userService.assignRoleToUser("seanthesheep", "ROLE_SUPER_ADMIN");
 		};
 	}
 }

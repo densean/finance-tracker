@@ -1,12 +1,13 @@
-package com.example.finance_tracker.model;
+package com.example.finance_tracker.model.employerDetails;
 
+import com.example.finance_tracker.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "_employer-details")
+@Entity(name = "_employer_details")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

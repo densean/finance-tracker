@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Object assignRoleToUser(String username, String roleName) {
-        log.info("assigned role {} to user {}", roleName, username);
      User user = userRepo.findByUsername(username);
      Role role = roleRepo.findByName(roleName);
      user.getRoles().add(role);
@@ -76,10 +75,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Page<User> getUsers(int pageNo, int pageSize) {
+    public Page<UserPublicDto> getUsers(int pageNo, int pageSize) {
+        log.info("pageNo: {}, pageSize: {}", pageNo, pageSize);
         Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<User> userPage = userRepo.findAll(pageable);
         log.info("fetching all users");
-        return userRepo.findAll(pageable);
+        return userPage.map(this::convertToUserPublicDto);
+    }
+
+    private UserPublicDto convertToUserPublicDto(User user) {
+        UserPublicDto dto = new UserPublicDto();
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setUsername(user.getUsername());
+        dto.setDob(user.getDob());
+        dto.setRoles(user.getRoles());
+        return dto;
     }
 
     @Override

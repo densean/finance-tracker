@@ -1,16 +1,14 @@
 package com.example.finance_tracker.service;
 
-import com.example.finance_tracker.model.EmployerDetails;
+import com.example.finance_tracker.model.employerDetails.EmpDetailsNoAssociationDto;
+import com.example.finance_tracker.model.employerDetails.EmployerDetails;
 import com.example.finance_tracker.model.User;
 import com.example.finance_tracker.repository.EmployerDetailsRepository;
 import com.example.finance_tracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,27 +20,50 @@ public class EmployerDetailsServiceImpl implements EmployerDetailsService{
     private final EmployerDetailsRepository empDetailsRepo;
 
     @Override
-    public EmployerDetails saveEmployerDetails(Long userId, EmployerDetails employerDetails) {
-        User userDetails = userRepo.findById(userId).orElseThrow();
-        return empDetailsRepo.save(employerDetails);
+    public EmpDetailsNoAssociationDto saveEmployerDetails(Long userId, EmployerDetails employerDetails) {
+        User user = userRepo.findById(userId).orElseThrow();
+        employerDetails.setUser(user);
+        empDetailsRepo.save(employerDetails);
+        EmpDetailsNoAssociationDto empDetailsNoAssociationDto = new EmpDetailsNoAssociationDto();
+        empDetailsNoAssociationDto.setEmployerName(employerDetails.getEmployerName());
+        empDetailsNoAssociationDto.setEmployerSalary(employerDetails.getEmployerSalary());
+        empDetailsNoAssociationDto.setEmployerId(employerDetails.getEmployerId());
+        empDetailsNoAssociationDto.setEmployerType(employerDetails.getEmployerType());
+        return empDetailsNoAssociationDto;
     }
 
     @Override
     public void removeEmployerDetails(Long userId) {
         EmployerDetails existingEmployerDetails = empDetailsRepo.findByUserId(userId);
             empDetailsRepo.delete(existingEmployerDetails);
-
     }
 
     @Override
-    public EmployerDetails updateEmployerDetails(Long userId, EmployerDetails employerDetails) {
+    public EmpDetailsNoAssociationDto updateEmployerDetails(Long userId, EmployerDetails employerDetails) {
         EmployerDetails existingEmployerDetails = empDetailsRepo.findByUserId(userId);
-            return empDetailsRepo.save(existingEmployerDetails);
+        existingEmployerDetails.setEmployerName(employerDetails.getEmployerName());
+        existingEmployerDetails.setEmployerSalary(employerDetails.getEmployerSalary());
+        existingEmployerDetails.setEmployerId(employerDetails.getEmployerId());
+        existingEmployerDetails.setEmployerType(employerDetails.getEmployerType());
+        empDetailsRepo.save(existingEmployerDetails);
+        EmpDetailsNoAssociationDto empDetailsNoAssociationDto = new EmpDetailsNoAssociationDto();
+        empDetailsNoAssociationDto.setEmployerName(employerDetails.getEmployerName());
+        empDetailsNoAssociationDto.setEmployerSalary(employerDetails.getEmployerSalary());
+        empDetailsNoAssociationDto.setEmployerId(employerDetails.getEmployerId());
+        empDetailsNoAssociationDto.setEmployerType(employerDetails.getEmployerType());
+        return empDetailsNoAssociationDto;
 
     }
 
     @Override
-    public EmployerDetails getEmployerDetails(Long userId) {
-        return empDetailsRepo.findByUserId(userId);
+    public EmpDetailsNoAssociationDto getEmployerDetails(Long userId) {
+        EmployerDetails employerDetails = empDetailsRepo.findByUserId(userId);
+        EmpDetailsNoAssociationDto empDetails = new EmpDetailsNoAssociationDto();
+        empDetails.setEmployerId(employerDetails.getEmployerId());
+        empDetails.setEmployerSalary(employerDetails.getEmployerSalary());
+        empDetails.setEmployerName(employerDetails.getEmployerName());
+        empDetails.setEmployerType(employerDetails.getEmployerType());
+        return empDetails;
     }
+
 }

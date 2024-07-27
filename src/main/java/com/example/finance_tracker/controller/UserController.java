@@ -5,25 +5,21 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.finance_tracker.constants.ResponseConstants;
-import com.example.finance_tracker.handlers.ErrorHandler;
 import com.example.finance_tracker.handlers.ResponseHandler;
+import com.example.finance_tracker.model.UserPublicDto;
+import com.example.finance_tracker.model.pagination.PaginationDto;
 import com.example.finance_tracker.model.Role;
 import com.example.finance_tracker.model.User;
-import com.example.finance_tracker.model.UserPublicDto;
+import com.example.finance_tracker.model.pagination.PaginationResponse;
 import com.example.finance_tracker.service.UserService;
+import com.example.finance_tracker.tools.PaginationResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,13 +42,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/users")
-    public ResponseEntity<Object> getUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "15") int size) {
-        Page<User> users = userService.getUsers(page, size);
+    @GetMapping("/super-admin/users")
+    public ResponseEntity<Object> getUsers(@RequestBody PaginationDto paginationDto) {
+        int pageNo = paginationDto.getPageNo();
+        int pageSize = paginationDto.getPageSize();
+        Page<UserPublicDto> users = userService.getUsers(pageNo, pageSize);
+        PaginationResponse<UserPublicDto> userPaginationResponse = PaginationResponseUtil.formatPaginationResponse(users);
+
         return ResponseHandler.generateResponse(
                 ResponseConstants.SUCCESS_GET,
                 HttpStatus.OK,
-                users,
+                userPaginationResponse,
                 null,
                 "getUsersAsync");
     }

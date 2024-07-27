@@ -1,11 +1,11 @@
 package com.example.finance_tracker.service;
 
-import com.example.finance_tracker.model.EmployerDetails;
-import com.example.finance_tracker.model.User;
+import com.example.finance_tracker.model.employerDetails.EmpDetailsNoAssociationDto;
+import com.example.finance_tracker.model.employerDetails.EmployerDetails;
 
 public interface EmployerDetailsService {
-    EmployerDetails saveEmployerDetails(Long userId, EmployerDetails employerDetails);
+    EmpDetailsNoAssociationDto saveEmployerDetails(Long userId, EmployerDetails employerDetails);
     void removeEmployerDetails (Long userId);
-    EmployerDetails updateEmployerDetails(Long userId, EmployerDetails employerDetails);
-    EmployerDetails getEmployerDetails(Long userId);
+    EmpDetailsNoAssociationDto updateEmployerDetails(Long userId, EmployerDetails employerDetails);
+    EmpDetailsNoAssociationDto getEmployerDetails(Long userId);
 }
