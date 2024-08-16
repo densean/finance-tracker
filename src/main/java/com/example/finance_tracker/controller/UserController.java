@@ -57,11 +57,17 @@ public class UserController {
                 "getUsersAsync");
     }
 
-    @PostMapping("/users")
+    @PostMapping("/signup")
     public ResponseEntity<Object> addUser(@RequestBody User user) {
-        System.out.println(user);
-        return ResponseHandler.generateResponse(ResponseConstants.SUCCESS_POST, HttpStatus.CREATED, userService.saveUser(user), null, "addUserAsync");
+        User savedUser = userService.saveUser(user);
+        try {
+            userService.assignRoleToUser(savedUser.getUsername(), "ROLE_USER");
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("Failed to assign role", HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage(), "addUserAsync");
+        }
+        return ResponseHandler.generateResponse(ResponseConstants.SUCCESS_POST, HttpStatus.CREATED, savedUser, null, "addUserAsync");
     }
+
 
     @PutMapping("/users/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User userDetails) {

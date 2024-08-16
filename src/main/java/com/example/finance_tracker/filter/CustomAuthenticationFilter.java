@@ -41,6 +41,31 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         return authenticationManager.authenticate(authenticationToken);
     }
 
+
+//    @Override
+//    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+//        try {
+//            LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+//
+//            // Extract username and password from the JSON object
+//            String username = loginRequest.getUsername();
+//            String password = loginRequest.getPassword();
+//
+//            // Log the credentials (avoid doing this in production)
+//            log.info("Username is: {}", username);
+//            log.info("Password is: {}", password);
+//
+//            // Create an authentication token
+//            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+//
+//            // Authenticate the token
+//            return getAuthenticationManager().authenticate(authenticationToken);
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User)authentication.getPrincipal();

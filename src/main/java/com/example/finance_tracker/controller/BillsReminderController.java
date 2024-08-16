@@ -44,13 +44,19 @@ public class BillsReminderController {
     @GetMapping("/users/{userId}/bills/{billReminderId}")
     public ResponseEntity<Object> getBillReminderById(@PathVariable Long userId, @PathVariable Long billReminderId) {
         Optional<BillReminder> billReminder = billReminderService.getBillById(userId, billReminderId);
-        return ResponseHandler.generateResponse(
+        return billReminder.map(bill -> ResponseHandler.generateResponse(
                 ResponseConstants.SUCCESS_GET,
                 HttpStatus.OK,
-                billReminder.get(),
+                bill,
                 null,
                 "getBillReminderByIdAsync"
-        );
+        )).orElseGet(() -> ResponseHandler.generateResponse(
+                "Not found",
+                HttpStatus.NOT_FOUND,
+                null,
+                "Bill not found",
+                "getBillReminderByIdAsync"
+        ));
     }
 
     @GetMapping("/users/{userId}/bills")
@@ -122,6 +128,18 @@ public class BillsReminderController {
                 updatedBill,
                 null,
                 "updateBillAsync"
+        );
+    }
+
+    @GetMapping("/users/{userId}/bills/installments/{installmentId}")
+    public ResponseEntity<Object> getInstallmentBills(@PathVariable Long userId, @PathVariable Long installmentId) {
+        Collection<BillReminder> bills = billReminderService.getInstallmentBills(installmentId);
+        return ResponseHandler.generateResponse(
+                ResponseConstants.SUCCESS_GET,
+                HttpStatus.OK,
+                bills,
+                null,
+                "getInstallmentBillsAsync"
         );
     }
 

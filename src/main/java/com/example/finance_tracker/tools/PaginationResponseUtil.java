@@ -10,7 +10,8 @@ public class PaginationResponseUtil {
                 page.getContent(),
                 page.getNumber(),
                 page.getSize(),
-                page.getPageable().getOffset()
+                page.getTotalElements(),
+                page.getTotalPages()
         );
     }
 }

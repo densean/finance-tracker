@@ -33,18 +33,17 @@ public class BillReminder {
 
     private String notes;
 
-    /***
-     * occurrence chosen would be a string (from dropdown) with an int value
-     * monthly = 1, weekly = 4, daily = 30
-     */
     @NotNull
     private int occurrence;
 
-    //how many payments
     @NotNull
     private int term;
 
     private boolean isPaid = false;
+
+    private boolean isInstallment = false;
+
+    private int paidCount = 0;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

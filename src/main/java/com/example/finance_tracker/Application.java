@@ -41,7 +41,7 @@ public class Application {
 					"sean@gmail.com",
 					"seanthesheep",
 					LocalDate.of(1998, 04, 30),
-					"aaa",
+					"aaabbbcccddd",
 					false,
 					new ArrayList<>(),
 					new ArrayList<>(),

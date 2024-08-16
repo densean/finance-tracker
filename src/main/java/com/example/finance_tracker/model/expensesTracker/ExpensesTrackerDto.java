@@ -8,6 +8,7 @@ import java.util.Date;
 @Data
 @Validated
 public class ExpensesTrackerDto {
+    private int id;
     private String description;
     private String category;
     private Date date;

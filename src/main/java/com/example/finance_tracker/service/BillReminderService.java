@@ -16,4 +16,7 @@ public interface BillReminderService {
     Page<BillReminder> getAllBills (int pageNo, int pageSize);
     void removeBill (Long userId, Long billReminderId);
     BillReminder updateBill(Long userId, Long billReminderId, BillReminder billReminder);
+
+    // New method to fetch installment bills
+    Collection<BillReminder> getInstallmentBills(Long installmentId);
 }
