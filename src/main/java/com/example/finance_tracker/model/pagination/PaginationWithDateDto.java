@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class PaginationWithDateDto {
-    private int pageSize;
-    private int pageNo;
+    private int pageSize = Integer.MAX_VALUE;
+    private int pageNo = 0;
     private LocalDate date;
 }

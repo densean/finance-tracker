@@ -54,9 +54,14 @@ public class ExpensesTrackerController {
     }
 
     @GetMapping("/users/{userId}/expenses")
-    public ResponseEntity<Object> getExpenses(@PathVariable Long userId, @RequestBody PaginationDto paginationDto) {
+    public ResponseEntity<Object> getExpenses(
+            @PathVariable Long userId,
+            @ModelAttribute PaginationDto paginationDto) {
+
         int pageNo = paginationDto.getPageNo();
         int pageSize = paginationDto.getPageSize();
+        System.out.println("Page No: " + pageNo + ", Page Size: " + pageSize);
+
         Page<ExpensesTracker> expenses = expTrackerService.getExpenses(pageNo, pageSize, userId);
         PaginationResponse<ExpensesTracker> expensesDto = PaginationResponseUtil.formatPaginationResponse(expenses);
 
